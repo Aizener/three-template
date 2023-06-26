@@ -4,6 +4,9 @@ import { GameRenderer } from './renderer';
 import { GameControls } from './controls';
 import { GameWorld } from './world';
 import { Time } from './utils/time';
+import { Resource } from './utils/resource';
+import assets from './utils/assets';
+import { GameLight } from './light';
 
 export class Game {
   width!: number;
@@ -12,27 +15,31 @@ export class Game {
   selector!: string;
   element!: HTMLElement;
   time!: Time;
+  resource!: Resource;
   gameScene!: GameScene;
   gameCamera!: GameCamera;
   gameRenderer!: GameRenderer;
+  gameLight!: GameLight;
   gameControls!: GameControls;
   gameWorld!: GameWorld;
 
   static instance: Game;
-  
+
   constructor(selector: string) {
     if (Game.instance) {
       return Game.instance;
     }
     Game.instance = this;
     this.selector = selector;
-    
+
     this.initConfig();
     this.initTime();
+    this.initResource();
     this.initContainer();
     this.initScene();
     this.initCamera();
     this.initRenderer();
+    this.initLight();
     this.initControls();
     this.initWorld();
 
@@ -51,6 +58,11 @@ export class Game {
 
   initTime() {
     this.time = new Time();
+  }
+
+  initResource() {
+    this.resource = new Resource(assets);
+    console.log(this.resource);
   }
 
   initContainer() {
@@ -72,6 +84,10 @@ export class Game {
   initRenderer() {
     this.gameRenderer = new GameRenderer(this.element);
     this.gameRenderer.renderer.render(this.gameScene.scene, this.gameCamera.camera);
+  }
+
+  initLight() {
+    this.gameLight = new GameLight();
   }
 
   initControls() {
