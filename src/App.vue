@@ -12,7 +12,9 @@ onMounted(() => {
     progress.value = loaded / total;
   });
   game.resource.loaders.on('loaded', () => {
-    isLoad.value = true;
+    setTimeout(() => {
+      isLoad.value = true;
+    }, 1e3);
   });
 });
 </script>
