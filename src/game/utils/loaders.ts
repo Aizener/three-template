@@ -1,5 +1,6 @@
 import EventEmitter from 'events';
 import { CubeTextureLoader, LoadingManager, TextureLoader } from "three";
+import { Game } from '..';
 
 export class Loaders extends EventEmitter {
   textureLoader!: TextureLoader;
@@ -9,8 +10,8 @@ export class Loaders extends EventEmitter {
   constructor() {
     super();
     this.loadingManager = new LoadingManager();
-    this.textureLoader = new TextureLoader(this.loadingManager);
-    this.cubeTextureLoader = new CubeTextureLoader(this.loadingManager);
+    this.textureLoader = new TextureLoader(this.loadingManager).setPath(Game.BASE_DIR);
+    this.cubeTextureLoader = new CubeTextureLoader(this.loadingManager).setPath(Game.BASE_DIR);
 
     this.loadingManager.onStart = (url: string, loaded: number, total: number) => {
       this.emit('start', { url, loaded, total });
@@ -23,5 +24,5 @@ export class Loaders extends EventEmitter {
     }
   }
 
-  update() {}
+  update() { }
 }

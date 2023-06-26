@@ -1,5 +1,5 @@
 import { EventEmitter } from 'events';
-import { DoubleSide, Material, Mesh, MeshStandardMaterial, Object3D, Scene, SphereGeometry, Sprite, Vector3 } from 'three';
+import { DoubleSide, Material, Mesh, MeshStandardMaterial, Object3D, RingGeometry, Scene, SphereGeometry, Sprite, Vector3 } from 'three';
 import { Game } from '../index';
 import { PlanetInfo } from '@/assets/planet';
 import { Tag } from './tag';
@@ -14,6 +14,8 @@ export class Planet extends EventEmitter {
   id!: string;
   position: Vector3 = new Vector3();
 
+  static SPHERE_GEOMETRY: SphereGeometry = new SphereGeometry(1, 1024, 1024);
+
   constructor(planetInfo: PlanetInfo) {
     super();
     this.game = Game.getInstance();
@@ -23,16 +25,31 @@ export class Planet extends EventEmitter {
   }
 
   init() {
-    const { textureName, radius, position, orbit, id, name } = this.planetInfo;
+    const { textureName, radius, position, orbit, id, name, additionaltextureName } = this.planetInfo;
     const texture = this.game.resource.getTexture(textureName);
-    const geometry = new SphereGeometry(radius, 1024, 1024);
+    const geometry = Planet.SPHERE_GEOMETRY;
     const material = new MeshStandardMaterial({
       side: DoubleSide,
       map: texture
     });
     this.planet = new Mesh(geometry, material);
+    this.planet.scale.set(radius, radius, radius);
     this.planet.position.set(position[0], position[1], position[2]);
     this.planet.position.x = orbit || 0;
+
+    if (additionaltextureName) {
+      const texture = this.game.resource.getTexture(additionaltextureName);
+      const ring = new Mesh(
+        new RingGeometry(radius + 0.1, radius + 0.6),
+        new MeshStandardMaterial({
+          side: DoubleSide,
+          map: texture
+        })
+      );
+      ring.rotation.x = Math.PI * 0.5;
+      this.planet.add(ring);
+    }
+
     this.position.x = this.planet.position.x;
     this.box = new Object3D();
     this.box.add(this.planet);

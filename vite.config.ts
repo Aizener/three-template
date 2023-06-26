@@ -4,6 +4,7 @@ import path from 'path'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: '/solar-system/',
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src')

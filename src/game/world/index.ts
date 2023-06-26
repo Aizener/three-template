@@ -29,10 +29,11 @@ export class GameWorld extends EventEmitter {
       this.planets.push(new Planet(planetInfo));
       this.tracks.push(new Track(planetInfo.position[0]));
     })
-    this.onControlsChange();
     this.initCameraPosition();
     this.handleSunMaterial();
     this.handleEarthAndMoon();
+    this.changePlanetSpriteRatio();
+    this.onControlsChange();
   }
 
   initCameraPosition() {
@@ -102,20 +103,24 @@ export class GameWorld extends EventEmitter {
     }
   }
 
+  changePlanetSpriteRatio() {
+    this.planets.forEach(planetObject => {
+      const sprite = planetObject.sprite;
+      const position = planetObject.position;
+      const distance = this.game.gameCamera.camera.position.distanceTo(position);
+      const scaleRatio = 0.05 + distance * 0.05;
+      if (planetObject.id === 'earth') {
+        const moon = planetObject.planet.children[0];
+        const sprite = moon.children[1];
+        sprite.scale.set(scaleRatio, scaleRatio, 1);
+      }
+      sprite.scale.set(scaleRatio, scaleRatio, 1);
+    });
+  }
+
   onControlsChange() {
     this.game.gameControls.on('change', () => {
-      this.planets.forEach(planetObject => {
-        const sprite = planetObject.sprite;
-        const position = planetObject.position;
-        const distance = this.game.gameCamera.camera.position.distanceTo(position);
-        const scaleRatio = 0.1 + distance * 0.05;
-        if (planetObject.id === 'earth') {
-          const moon = planetObject.planet.children[0];
-          const sprite = moon.children[1];
-          sprite.scale.set(scaleRatio, scaleRatio, 1);
-        }
-        sprite.scale.set(scaleRatio, scaleRatio, 1);
-      });
+      this.changePlanetSpriteRatio();
     });
   }
 

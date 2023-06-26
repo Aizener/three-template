@@ -1,5 +1,5 @@
 import EventEmitter from 'events';
-import { WebGLRenderer } from 'three';
+import { LinearToneMapping, WebGLRenderer } from 'three';
 import { Game } from './index';
 
 export class GameRenderer extends EventEmitter {
@@ -10,7 +10,7 @@ export class GameRenderer extends EventEmitter {
 
   constructor(element: HTMLElement) {
     super();
-    this.element = element; 
+    this.element = element;
     this.game = Game.getInstance();
     if (this.element.tagName === GameRenderer.CANVAS_TAG_NAME) {
       this.renderer = new WebGLRenderer({
@@ -20,18 +20,23 @@ export class GameRenderer extends EventEmitter {
       this.renderer = new WebGLRenderer();
       this.element.appendChild(this.renderer.domElement);
     }
+    this.renderer.toneMapping = LinearToneMapping;
+    this.onResize();
     this.update();
   }
 
   update() {
     const {
-      width,
-      height,
       gameScene: { scene },
       gameCamera: { camera }
     } = this.game;
 
-    this.renderer.setSize(width, height);
     this.renderer.render(scene, camera);
+  }
+
+  onResize() {
+    this.game.width = window.innerWidth;
+    this.game.height = window.innerHeight;
+    this.renderer.setSize(this.game.width, this.game.height);
   }
 }

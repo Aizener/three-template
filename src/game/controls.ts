@@ -1,7 +1,6 @@
 import { EventEmitter } from 'events';
 import { Game } from './index';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import { Vector3 } from 'three';
 
 export class GameControls extends EventEmitter {
   game: Game;

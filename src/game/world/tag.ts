@@ -32,8 +32,6 @@ export class Tag extends EventEmitter {
 
     // 创建Sprite对象并返回
     const sprite = new Sprite(material);
-    const scaleRatio = 0.03;
-    sprite.scale.set(textWidth * scaleRatio, textHeight * scaleRatio, 1); // 调整标签的缩放大小，以适应文字
 
     return sprite;
   }

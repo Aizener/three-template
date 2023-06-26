@@ -45,7 +45,6 @@ export const planetInfoList: PlanetInfo[] = [
     rotationPeriod: 0.00017,
     dip: 177.4,
     textureName: '2k_venus_surface',
-    additionaltextureName: '2k_venus_atmosphere'
   },
   {
     id: 'earth',
@@ -58,14 +57,13 @@ export const planetInfoList: PlanetInfo[] = [
     rotationPeriod: 0.0417,
     dip: 23.44,
     textureName: '2k_earth_daymap',
-    additionaltextureName: '2k_earth_clouds'
   },
   {
     id: 'moon',
     name: '月球',
     radius: 0.16,
     position: [10, 0, 0],
-    orbit: 1,
+    orbit: 1.5,
     orbitalInclination: 5.14,
     orbitalPeriod: 0.0015,
     rotationPeriod: 0.00139,

@@ -24,6 +24,7 @@ export class Game {
   gameWorld!: GameWorld;
 
   static instance: Game;
+  static BASE_DIR: string = import.meta.env.BASE_URL;
 
   constructor(selector: string) {
     if (Game.instance) {
@@ -44,6 +45,8 @@ export class Game {
     this.initWorld();
 
     this.update();
+    this.onResize();
+    window.addEventListener('resize', this.onResize.bind(this));
   }
 
   static getInstance() {
@@ -62,7 +65,6 @@ export class Game {
 
   initResource() {
     this.resource = new Resource(assets);
-    console.log(this.resource);
   }
 
   initContainer() {
@@ -109,5 +111,10 @@ export class Game {
     window.requestAnimationFrame(() => {
       this.update();
     });
+  }
+
+  onResize() {
+    this.gameCamera && this.gameCamera.onResize();
+    this.gameRenderer && this.gameRenderer.onResize();
   }
 }
