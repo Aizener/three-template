@@ -36,7 +36,7 @@ export class Resource extends EventEmitter {
 
   async load(asset: ResourceAsset) {
     const { type, url, name } = asset;
-    this.emit('itemProgress', url, 0, 0);
+    this.emit('itemProgress', url, 0, 1);
     switch (type) {
       case 'texture':
         const texture = await this.loaders.getTextureLoader().loadAsync(url, progress => {
