@@ -84,6 +84,7 @@ $color: #ccc;
     color: #fff;
     font-size: 12px;
     margin-top: 0.5rem;
+    text-align: center;
   }
   &-box {
     width: 100%;
@@ -120,6 +121,11 @@ $color: #ccc;
     transform: translateY(250px) scaleY(1);
     text-transform: uppercase;
     text-shadow: 0 0 5px $color;
+    @media screen and (max-width: 768px) {
+      font-size: 80px;
+      transform: translateY(250px) scaleY(3);
+      white-space: nowrap;
+    }
   }
   &-info {
     width: 300px;
@@ -136,9 +142,15 @@ $color: #ccc;
     }
     &.info1 {
       transform: translate(-300px, -250px);
+      @media screen and (max-width: 768px) {
+        transform: translate(0, -80px);
+      }
     }
     &.info2 {
       transform: translate(400px, -150px);
+      @media screen and (max-width: 768px) {
+        transform: translate(300px, -357px);
+      }
     }
   }
 }
@@ -153,6 +165,10 @@ $color: #ccc;
   align-items: center;
   text-shadow: 0 0 5px rgb(50, 121, 120);
   opacity: 0;
+  @media screen and (max-width: 768px) {
+    font-size: 50px;
+    white-space: nowrap;
+  }
 }
 .link {
   color: rgb(33, 101, 103);

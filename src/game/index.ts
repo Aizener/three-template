@@ -45,8 +45,10 @@ export class Game {
     this.initWorld();
 
     this.update();
-    this.onResize();
-    window.addEventListener('resize', this.onResize.bind(this));
+    window.onload = () => {
+      this.onResize();
+      window.addEventListener('resize', this.onResize.bind(this));
+    }
   }
 
   static getInstance() {

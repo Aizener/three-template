@@ -2,7 +2,6 @@ import EventEmitter from 'events';
 import { Game } from '../index';
 import { Person } from './person';
 import { GSAPHelper } from '../utils/gsap-helper';
-import { AudioHowl } from '../utils/audio';
 
 export class GameWorld extends EventEmitter {
   game: Game;

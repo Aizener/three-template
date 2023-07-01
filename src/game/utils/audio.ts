@@ -7,7 +7,7 @@ export class AudioHowl {
 
   init() {
     const sound = new Howl({
-      src: ['/audio/bgm.ogg'],
+      src: ['/rotate-person/audio/bgm.ogg'],
       html5: true
     });
 

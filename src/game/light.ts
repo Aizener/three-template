@@ -1,6 +1,6 @@
 import { EventEmitter } from 'events';
 import { Game } from './index';
-import { AmbientLight, DirectionalLight, Light, PointLight } from 'three';
+import { AmbientLight, DirectionalLight, Light } from 'three';
 
 export class GameLight extends EventEmitter {
   game: Game;
