@@ -10,10 +10,13 @@
   },
   "dependencies": {
     "events": "^3.3.0",
+    "gsap": "^3.12.2",
+    "howler": "^2.2.3",
     "three": "^0.153.0",
     "vue": "^3.2.47"
   },
   "devDependencies": {
+    "@types/howler": "^2.2.7",
     "@types/node": "^20.3.1",
     "@types/three": "^0.152.1",
     "@vitejs/plugin-vue": "^4.1.0",

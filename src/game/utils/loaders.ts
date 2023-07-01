@@ -15,10 +15,10 @@ export class Loaders extends EventEmitter {
     this.loadingManager = new LoadingManager();
 
     this.loadingManager.onStart = (url: string, loaded: number, total: number) => {
-      this.emit('start', { url, loaded, total });
+      this.emit('start', url, loaded, total);
     }
     this.loadingManager.onProgress = (url: string, loaded: number, total: number) => {
-      this.emit('progress', { url, loaded, total });
+      this.emit('progress', url, loaded, total);
     }
     this.loadingManager.onLoad = () => {
       this.emit('loaded');

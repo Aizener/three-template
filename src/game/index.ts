@@ -93,7 +93,7 @@ export class Game {
   }
 
   initControls() {
-    this.gameControls = new GameControls();
+    // this.gameControls = new GameControls();
   }
 
   initWorld() {

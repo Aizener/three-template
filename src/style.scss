@@ -6,5 +6,18 @@
 
 html, body {
   height: 100%;
-  overflow: hidden;
+  background-color: rgb(33, 101, 103);
+}
+
+canvas.webgl {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: gray;
 }

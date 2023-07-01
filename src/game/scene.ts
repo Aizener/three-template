@@ -6,8 +6,7 @@ export class GameScene extends EventEmitter {
   constructor() {
     super();
     this.scene = new Scene();
-    this.scene.background = new Color(0x88ccee);
-    this.scene.fog = new Fog(0x88ccee, 0, 50);
+    this.scene.fog = new Fog('rgb(33, 101, 103)', 0, 5);
   }
 
   update() { }

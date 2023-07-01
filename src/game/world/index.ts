@@ -1,25 +1,22 @@
 import EventEmitter from 'events';
-import { SkyBox } from './sky-box';
-import { Cube } from './cube';
 import { Game } from '../index';
+import { Person } from './person';
+import { GSAPHelper } from '../utils/gsap-helper';
+import { AudioHowl } from '../utils/audio';
 
 export class GameWorld extends EventEmitter {
   game: Game;
-  cube: Cube;
-  sky: SkyBox;
+  person: Person;
+  gsapHelper: GSAPHelper;
   constructor() {
     super();
     this.game = Game.getInstance();
-    this.cube = new Cube();
-    this.cube.update = () => {
-      const elapsed = this.game.time.elapsed;
-      const cube = this.cube.mesh;
-      cube.rotation.y = elapsed * 0.001;
-    }
-    this.sky = new SkyBox();
+    this.person = new Person();
+    this.gsapHelper = new GSAPHelper();
   }
 
   update() {
-    this.cube && this.cube.update();
+    this.person && this.person.update();
+    this.gsapHelper && this.gsapHelper.update();
   }
 }
