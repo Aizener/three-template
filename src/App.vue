@@ -123,7 +123,7 @@ $color: #ccc;
     text-shadow: 0 0 5px $color;
     @media screen and (max-width: 768px) {
       font-size: 80px;
-      transform: translateY(250px) scaleY(3);
+      transform: translateY(250px) scaleX(0.8) scaleY(3);
       white-space: nowrap;
     }
   }
@@ -143,13 +143,13 @@ $color: #ccc;
     &.info1 {
       transform: translate(-300px, -250px);
       @media screen and (max-width: 768px) {
-        transform: translate(0, -80px);
+        transform: translate(0, -80px) scaleX(0.8);
       }
     }
     &.info2 {
       transform: translate(400px, -150px);
       @media screen and (max-width: 768px) {
-        transform: translate(300px, -357px);
+        transform: translate(300px, -357px) scaleX(0.8);
       }
     }
   }
