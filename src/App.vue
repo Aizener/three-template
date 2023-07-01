@@ -4,20 +4,27 @@ import { Game } from '@/game';
 import { AudioHowl } from './game/utils/audio';
 
 const progress = ref(0);
-const loadText = ref('');
+const loadText = ref('资源解析中...');
 const loaded = ref(false);
 const running = ref(false);
+const loadedNum = ref(1);
 const handleStart = () => {
   new AudioHowl().init();
   running.value = true;
 }
 onMounted(() => {
   const game = new Game('canvas.webgl');
-  game.resource.loaders.on('progress', (url: string, loaded: number, total: number) => {
-    loadText.value = `加载资源${url}中...`;
-    progress.value = loaded / total;
+  game.resource.on('itemProgress', (url: string, itemLoaded: number, itemTotal: number) => {
+    loadText.value = `资源数：${loadedNum.value}/${game.resource.assets.length}，加载${url}中...`;
+    progress.value = itemLoaded / itemTotal;
   });
-  game.resource.loaders.on('loaded', () => {
+  game.resource.on('itemLoaded', () => {
+    loadedNum.value ++;
+    if (loadedNum.value <= game.resource.assets.length) {
+      progress.value = 0;
+    }
+  });
+  game.resource.on('loaded', () => {
     loadText.value = '资源加载完成，场景载入中...';
     setTimeout(() => {
       loaded.value = true;

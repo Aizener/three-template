@@ -15,7 +15,7 @@ export class Person extends EventEmitter {
   }
 
   init() {
-    this.game.resource.loaders.on('loaded', () => {
+    this.game.resource.on('loaded', () => {
       const model = this.game.resource.models.find(item => item.userData.name === 'alien_walk') as GLTF;
       this.game.gameScene.scene.add(model.scene);
       this.mixer = new AnimationMixer(model.scene as Object3D);

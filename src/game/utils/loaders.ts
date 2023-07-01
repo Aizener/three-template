@@ -48,8 +48,8 @@ export class Loaders extends EventEmitter {
     if (!this.gltfLoader) {
       this.gltfLoader = this.getGLTFLoader();
     }
-    const dracoLoader = new DRACOLoader(this.loadingManager);
-    dracoLoader.setDecoderPath('/draco/')
+    const dracoLoader = new DRACOLoader();
+    dracoLoader.setDecoderPath('/draco/');
     this.gltfLoader.setDRACOLoader(dracoLoader);
     return this.gltfLoader;
   }
