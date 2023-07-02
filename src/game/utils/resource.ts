@@ -22,34 +22,46 @@ export class Resource extends EventEmitter {
     this.textures = [];
     this.models = [];
     this.loaders = new Loaders();
-    this.loadAssets();
+    this.initAssets();
   }
 
-  loadAssets() {
+  async initAssets() {
+    await this.loadAssets();
+    this.emit('loaded');
+  }
+
+  async loadAssets() {
+    this.emit('beforeLoad');
     for (const asset of this.assets) {
-      this.load(asset);
+      await this.load(asset);
+      this.emit('itemLoaded');
     }
   }
 
-  load(asset: ResourceAsset) {
+  async load(asset: ResourceAsset) {
     const { type, url, name } = asset;
+    this.emit('itemProgress', url, 0, 1);
     switch (type) {
       case 'texture':
-        const texture = this.loaders.getTextureLoader().load(url);
+        const texture = await this.loaders.getTextureLoader().loadAsync(url, progress => {
+          this.emit('itemProgress', url, progress.loaded, progress.total);
+        });
         texture.name = name;
         this.textures.push(texture);
         break;
       case 'gltf':
-        this.loaders.getGLTFLoader().load(url, gltf => {
-          gltf.userData.name = name;
-          this.models.push(gltf);
+        const gltf = await this.loaders.getGLTFLoader().loadAsync(url, progress => {
+          this.emit('itemProgress', url, progress.loaded, progress.total);
         });
+        gltf.userData.name = name;
+        this.models.push(gltf);
         break;
       case 'glb':
-        this.loaders.getGLBLoader().load(url, glb => {
-          glb.userData.name = name;
-          this.models.push(glb);
+        const glb = await this.loaders.getGLBLoader().loadAsync(url, progress => {
+          this.emit('itemProgress', url, progress.loaded, progress.total);
         });
+        glb.userData.name = name;
+        this.models.push(glb);
         break;
     }
   }

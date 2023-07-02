@@ -14,7 +14,8 @@ export class GameWorld extends EventEmitter {
     this.cube.update = () => {
       const elapsed = this.game.time.elapsed;
       const cube = this.cube.mesh;
-      cube.rotation.y = elapsed * 0.001;
+      const time = elapsed * 0.001;
+      cube.rotation.y = time;
     }
     this.sky = new SkyBox();
   }

@@ -30,6 +30,7 @@ export class GameCamera extends EventEmitter {
     );
     this.camera.position.copy(this.config.position);
     this.camera.lookAt(0, 0, 0);
+    this.game.gameScene.scene.add(this.camera);
   }
 
   update() { }

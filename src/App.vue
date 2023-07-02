@@ -1,16 +1,13 @@
 <script setup lang="ts">
-import { onMounted } from 'vue';
-import { Game } from '@/game';
+import Preload from '@/components/Preload.vue';
 
-onMounted(() => {
-  new Game('canvas.webgl');
-});
 </script>
 
 <template>
   <div>
     <canvas class="webgl"></canvas>
   </div>
+  <Preload></Preload>
 </template>
 
 <style scoped lang="scss">
