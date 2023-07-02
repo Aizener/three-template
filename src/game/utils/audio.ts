@@ -11,7 +11,6 @@ export class AudioHowl {
       loop: true,
       html5: true
     });
-
     sound.play();
   }
 
