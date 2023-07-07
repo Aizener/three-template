@@ -12,6 +12,7 @@ export class GameControls extends EventEmitter {
       this.game.gameCamera.camera,
       this.game.gameRenderer.renderer.domElement
     );
+    this.controls.enableDamping = true;
   }
 
   update() {

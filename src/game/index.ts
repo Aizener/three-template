@@ -22,6 +22,8 @@ export class Game {
   gameLight!: GameLight;
   gameControls!: GameControls;
   gameWorld!: GameWorld;
+  started!: boolean;
+  private preRun!: boolean;
 
   static instance: Game;
   static BASE_DIR: string = import.meta.env.BASE_URL;
@@ -46,6 +48,7 @@ export class Game {
 
     this.update();
     this.onResize();
+    this.preRun = true;
     window.addEventListener('resize', this.onResize.bind(this));
   }
 
@@ -100,13 +103,19 @@ export class Game {
     this.gameWorld = new GameWorld();
   }
 
+  start() {
+    this.started = true;
+  }
+
   update() {
-    this.gameScene && this.gameScene.update();
-    this.gameCamera && this.gameCamera.update();
-    this.gameRenderer && this.gameRenderer.update();
-    this.gameControls && this.gameControls.update();
-    this.gameWorld && this.gameWorld.update();
-    this.time && this.time.update();
+    if (this.started || !this.preRun) {
+      this.gameScene && this.gameScene.update();
+      this.gameCamera && this.gameCamera.update();
+      this.gameRenderer && this.gameRenderer.update();
+      this.gameControls && this.gameControls.update();
+      this.gameWorld && this.gameWorld.update();
+      this.time && this.time.update();
+    }
 
     window.requestAnimationFrame(() => {
       this.update();

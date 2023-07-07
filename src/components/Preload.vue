@@ -11,6 +11,7 @@ let loadedNum = 1;
 let virtualLoaed = 0;
 let virtualTotal = 200;
 let lastLoaded = 0;
+let game: Game;
 
 const emits = defineEmits(['start']);
 const handleStart = () => {
@@ -18,11 +19,12 @@ const handleStart = () => {
   setTimeout(() => {
     started.value = true;
     new AudioHowl().init();
+    game.start();
     emits('start');
   });
 }
 onMounted(() => {
-  const game = new Game('canvas.webgl');
+  game = new Game('canvas.webgl');
   game.resource.on('itemProgress', (url: string, itemLoaded: number, itemTotal: number) => {
     loadText.value = `资源数：${loadedNum}/${game.resource.assets.length}，加载${url}中...`;
     if (itemTotal === 0) {
@@ -55,10 +57,10 @@ onMounted(() => {
 <template>
   <transition name="run">
     <div class="loading" v-if="!started">
-      <transition>
+      <transition name="fade">
         <button class="btn" @click="handleStart" v-if="status === 1">开始</button>
       </transition>
-      <transition>
+      <transition name="fade">
         <div class="loading-box" v-if="status === 0">
           <progress :value="progress"></progress>
           <div class="loading-text">{{ loadText }}</div>
@@ -116,22 +118,22 @@ onMounted(() => {
     }
   }
 }
-.v-enter-from {
-  transform: translateY(-3rem);
+.fade-enter-from {
+  transform: translateY(0);
 }
-.v-leave-to {
-  transform: translateY(2rem);
+.fade-leave-to {
+  transform: translateY(3rem);
 }
-.v-enter-from, .v-leave-to {
+.fade-enter-from, .fade-leave-to {
   opacity: 0;
 }
-.v-enter-active {
+.fade-enter-active {
   transition: all 0.8s;
 }
-.v-leave-active {
+.fade-leave-active {
   transition: all .3s;
 }
-.v-enter-active, .v-leave-active {
+.fade-enter-active, .fade-leave-active {
   position: absolute;
 }
 
