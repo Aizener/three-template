@@ -29,6 +29,7 @@ export class GameRenderer extends EventEmitter {
     this.renderer.shadowMap.type = VSMShadowMap;
     this.renderer.toneMapping = ACESFilmicToneMapping;
     this.renderer.useLegacyLights = false;
+    this.renderer.setPixelRatio(window.devicePixelRatio);
     this.onResize();
     this.update();
   }

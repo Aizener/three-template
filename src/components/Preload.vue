@@ -11,18 +11,23 @@ let loadedNum = 1;
 let virtualLoaed = 0;
 let virtualTotal = 200;
 let lastLoaded = 0;
+let game: Game;
 
-const emits = defineEmits(['start']);
+const emits = defineEmits(['start', 'end']);
 const handleStart = () => {
   status.value = 2;
   setTimeout(() => {
     started.value = true;
     new AudioHowl().init();
+    game.start();
     emits('start');
   });
 }
 onMounted(() => {
-  const game = new Game('canvas.webgl');
+  game = new Game('canvas.webgl');
+  game.gameWorld.fly.on('end', () => {
+    emits('end');
+  });
   game.resource.on('itemProgress', (url: string, itemLoaded: number, itemTotal: number) => {
     loadText.value = `资源数：${loadedNum}/${game.resource.assets.length}，加载${url}中...`;
     if (itemTotal === 0) {

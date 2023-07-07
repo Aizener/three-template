@@ -11,6 +11,7 @@ import { GameLight } from './light';
 export class Game {
   width!: number;
   height!: number;
+  started!: boolean;
   aspect!: number;
   selector!: string;
   element!: HTMLElement;
@@ -51,6 +52,10 @@ export class Game {
 
   static getInstance() {
     return Game.instance;
+  }
+
+  start() {
+    this.started = true;
   }
 
   initConfig() {
@@ -101,12 +106,14 @@ export class Game {
   }
 
   update() {
-    this.gameScene && this.gameScene.update();
-    this.gameCamera && this.gameCamera.update();
-    this.gameRenderer && this.gameRenderer.update();
-    this.gameControls && this.gameControls.update();
-    this.gameWorld && this.gameWorld.update();
-    this.time && this.time.update();
+    if (this.started) {
+      this.gameScene && this.gameScene.update();
+      this.gameCamera && this.gameCamera.update();
+      this.gameRenderer && this.gameRenderer.update();
+      this.gameControls && this.gameControls.update();
+      this.gameWorld && this.gameWorld.update();
+      this.time && this.time.update();
+    }
 
     window.requestAnimationFrame(() => {
       this.update();

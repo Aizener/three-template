@@ -33,7 +33,16 @@ export class GameCamera extends EventEmitter {
     this.game.gameScene.scene.add(this.camera);
   }
 
-  update() { }
+  update() {
+    const fly = this.game.gameWorld.fly;
+    if (fly.model) {
+      const position = fly.group.position;
+      const direction = fly.direction;
+      const newPosition = position.clone().sub(direction.clone().multiplyScalar(3));
+      this.camera.position.copy(newPosition);
+      this.camera.lookAt(position);
+    }
+  }
 
   onResize() {
     this.camera.aspect = this.game.aspect;
