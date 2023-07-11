@@ -1,17 +1,49 @@
 import { Howl } from 'howler';
 
+type Sound = {
+  howl: Howl;
+  name: string;
+}
 export class AudioHowl {
-  constructor() {
+  assets: string[];
+  sounds: Sound[] = [];
+  constructor(assets: string[]) {
+    this.assets = assets;
     this.init();
   }
 
   init() {
-    const sound = new Howl({
-      src: [import.meta.env.BASE_URL + 'audio/bgm.ogg'],
-      loop: true,
-      html5: true
+    this.assets.forEach(asset => {
+      const howl = new Howl({
+        src: [import.meta.env.BASE_URL + 'audio/' + asset],
+        loop: false,
+      });
+      this.sounds.push({
+        howl,
+        name: asset
+      });
     });
-    sound.play();
+  }
+
+  getHowl(name: string) {
+    const target = this.sounds.find(item => item.name === name);
+    return target ? target.howl : null;
+  }
+
+  load(name: string) {
+    const howl = this.getHowl(name);
+    if (!howl) {
+      return;
+    }
+    howl.load();
+  }
+
+  play(name: string) {
+    const howl = this.getHowl(name);
+    if (!howl) {
+      return;
+    }
+    howl.play();
   }
 
   update() { }

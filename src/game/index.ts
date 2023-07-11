@@ -23,6 +23,7 @@ export class Game {
   gameControls!: GameControls;
   gameWorld!: GameWorld;
   started!: boolean;
+  ready: boolean = false;
   private preRun!: boolean;
 
   static instance: Game;
@@ -68,7 +69,13 @@ export class Game {
 
   initResource() {
     this.resource = new Resource(assets);
-    console.log(this.resource)
+  }
+
+  onReady(callback: Function) {
+    this.resource.on('loaded', () => {
+      this.ready = true;
+      callback();
+    });
   }
 
   initContainer() {
@@ -108,7 +115,7 @@ export class Game {
   }
 
   update() {
-    if (this.started || !this.preRun) {
+    if (this.ready && (this.started || !this.preRun)) {
       this.gameScene && this.gameScene.update();
       this.gameCamera && this.gameCamera.update();
       this.gameRenderer && this.gameRenderer.update();

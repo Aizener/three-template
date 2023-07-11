@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Game } from '@/game';
-import { AudioHowl } from '@/game/utils/audio';
+// import { AudioHowl } from '@/game/utils/audio';
 import { onMounted, ref } from 'vue';
 
 const progress = ref(0);
@@ -18,9 +18,8 @@ const handleStart = () => {
   status.value = 2;
   setTimeout(() => {
     started.value = true;
-    new AudioHowl().init();
     game.start();
-    emits('start');
+    emits('start', game);
   });
 }
 onMounted(() => {
@@ -56,12 +55,12 @@ onMounted(() => {
 
 <template>
   <transition name="run">
-    <div class="loading" v-if="!started">
+    <div class="loading" v-show="!started">
       <transition name="fade">
-        <button class="btn" @click="handleStart" v-if="status === 1">开始</button>
+        <button id="start-btn" class="btn" @click="handleStart" v-show="status === 1">开始</button>
       </transition>
       <transition name="fade">
-        <div class="loading-box" v-if="status === 0">
+        <div class="loading-box" v-show="status === 0">
           <progress :value="progress"></progress>
           <div class="loading-text">{{ loadText }}</div>
         </div>

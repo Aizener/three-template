@@ -26,7 +26,7 @@ export class SkyBox extends EventEmitter {
       exposure: this.game.gameRenderer.renderer.toneMappingExposure
     };
     this.sky = new Sky();
-    this.sky.scale.setScalar(100);
+    this.sky.scale.setScalar(500);
     this.scene.add(this.sky);
     this.sun = new Vector3();
     const uniforms = this.sky.material.uniforms;

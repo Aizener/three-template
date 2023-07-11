@@ -28,12 +28,20 @@ export class GameCamera extends EventEmitter {
       near,
       far
     );
+    this.camera.rotation.order = 'YXZ';
     this.camera.position.copy(this.config.position);
     this.camera.lookAt(0, 0, 0);
     this.game.gameScene.scene.add(this.camera);
   }
 
-  update() { }
+  update() {
+    // const player = this.game.gameWorld.player;
+    // const playerPosition = player.mesh.position.clone();
+    // const direction = player.direction.clone();
+    // const cameraPosition = playerPosition.sub(direction.multiplyScalar(3));
+    // this.camera.position.copy(cameraPosition);
+    // this.camera.lookAt(playerPosition);
+  }
 
   onResize() {
     this.camera.aspect = this.game.aspect;
