@@ -18,9 +18,11 @@ const handleStart = () => {
   status.value = 2;
   setTimeout(() => {
     started.value = true;
-    new AudioHowl().init();
+    const sound = 'bgm.ogg';
+    const audio = new AudioHowl([sound]);
+    audio.load(sound).play(sound);
     game.start();
-    emits('start');
+    emits('start', game);
   });
 }
 onMounted(() => {

@@ -5,11 +5,18 @@ import { Game } from '../index';
 
 export class GameWorld extends EventEmitter {
   game: Game;
-  cube: Cube;
   sky: SkyBox;
+  cube!: Cube;
   constructor() {
     super();
     this.game = Game.getInstance();
+    this.sky = new SkyBox();
+    this.game.onReady(() => {
+      this.addCube();
+    });
+  }
+
+  addCube() {
     this.cube = new Cube();
     this.cube.update = () => {
       const elapsed = this.game.time.elapsed;
@@ -17,7 +24,6 @@ export class GameWorld extends EventEmitter {
       const time = elapsed * 0.001;
       cube.rotation.y = time;
     }
-    this.sky = new SkyBox();
   }
 
   update() {

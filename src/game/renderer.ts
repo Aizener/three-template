@@ -26,9 +26,9 @@ export class GameRenderer extends EventEmitter {
       this.element.appendChild(this.renderer.domElement);
     }
     this.renderer.shadowMap.enabled = true;
-    this.renderer.shadowMap.type = VSMShadowMap;
-    this.renderer.toneMapping = ACESFilmicToneMapping;
-    this.renderer.useLegacyLights = false;
+    this.renderer.shadowMap.type = VSMShadowMap;  // 使用更为逼真的投影算法，默认是：PCFShadowMap
+    this.renderer.toneMapping = ACESFilmicToneMapping; // 使用更为逼真的图形处理算法，默认是：NoToneMapping
+    this.renderer.useLegacyLights = false;  // 使用更为逼真先进的灯光处理，默认是：true
     this.renderer.setPixelRatio(window.devicePixelRatio);
     this.onResize();
     this.update();

@@ -11,6 +11,7 @@ export class Time {
   update() {
     const current = Date.now();
     this.delta = current - this.current;
+    this.delta = this.delta > 100 ? 16 : this.delta;
     this.elapsed += this.delta;
     this.current = current;
   }

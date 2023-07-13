@@ -9,24 +9,25 @@ import assets from './utils/assets';
 import { GameLight } from './light';
 
 export class Game {
-  width!: number;
-  height!: number;
-  aspect!: number;
-  selector!: string;
-  element!: HTMLElement;
-  time!: Time;
-  resource!: Resource;
-  gameScene!: GameScene;
-  gameCamera!: GameCamera;
-  gameRenderer!: GameRenderer;
-  gameLight!: GameLight;
-  gameControls!: GameControls;
-  gameWorld!: GameWorld;
-  started!: boolean;
-  private preRun!: boolean;
+  width!: number; // 视图宽度
+  height!: number; // 视图高度
+  aspect!: number; // 视图宽高比
+  selector!: string; // 元素的选择器
+  element!: HTMLElement; // 由selector获取到的元素
+  time!: Time; // 时间类实例
+  resource!: Resource; // 资源类实例
+  gameScene!: GameScene; // 场景类实例
+  gameCamera!: GameCamera; // 相机类实例
+  gameRenderer!: GameRenderer; // 渲染器类实例
+  gameLight!: GameLight; // 灯光类实例
+  gameControls!: GameControls; // 控制器类实例
+  gameWorld!: GameWorld; // 主体场景类实例
+  started!: boolean; // 是否开始进行渲染
+  ready!: boolean; // 资源是否准备完毕
+  private preRun!: boolean; // 是否进行了第一次的update方法
 
-  static instance: Game;
-  static BASE_DIR: string = import.meta.env.BASE_URL;
+  static instance: Game; // Game实例对象
+  static BASE_DIR: string = import.meta.env.BASE_URL; // 资源类需要用到的公共基础路径
 
   constructor(selector: string) {
     if (Game.instance) {
@@ -69,6 +70,13 @@ export class Game {
   initResource() {
     this.resource = new Resource(assets);
     console.log(this.resource)
+  }
+
+  onReady(callback: Function) {
+    this.resource.on('loaded', () => {
+      this.ready = true;
+      callback();
+    });
   }
 
   initContainer() {
