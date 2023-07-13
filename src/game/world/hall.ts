@@ -4,7 +4,6 @@ import { Game } from '../index';
 import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
 import { Resource } from '../utils/resource';
 import { Octree } from 'three/examples/jsm/math/Octree';
-import { OctreeHelper } from 'three/examples/jsm/helpers/OctreeHelper';
 
 export class Hall extends EventEmitter {
   game: Game;

@@ -1,5 +1,5 @@
 import EventEmitter from 'events';
-import { Color, Fog, Scene } from 'three';
+import { Color, Scene } from 'three';
 
 export class GameScene extends EventEmitter {
   scene!: Scene;

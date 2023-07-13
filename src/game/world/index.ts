@@ -3,7 +3,7 @@ import { Game } from '../index';
 import { Hall } from './hall';
 import { Player } from './player';
 import { Skull } from './objects/skull';
-import { Color, Group, Mesh, Object3D, Ray, Raycaster, Vector2 } from 'three';
+import { Group, Object3D, Raycaster, Vector2 } from 'three';
 import { Bird } from './objects/bird';
 import { SkyBox } from './sky-box';
 

@@ -4,7 +4,7 @@ import path from 'path'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: '/',
+  base: '/exhibition-hall/',
   server: {
     host: '0.0.0.0'
   },
