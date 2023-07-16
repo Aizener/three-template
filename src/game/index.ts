@@ -123,6 +123,7 @@ export class Game {
       this.gameControls && this.gameControls.update();
       this.gameWorld && this.gameWorld.update();
       this.time && this.time.update();
+      this.gameLight && this.gameLight.update();
     }
 
     window.requestAnimationFrame(() => {

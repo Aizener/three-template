@@ -9,10 +9,12 @@ export class GameLight extends EventEmitter {
     super();
     this.game = Game.getInstance();
     const ambientLight = new AmbientLight(0xffffff, 0.8);
-    const pointLight = new PointLight(0xffffff, 1.5);
+    const pointLight = new PointLight(0xffffff, 2);
+    pointLight.position.y = 10;
     this.light.push(ambientLight, pointLight);
     this.game.gameScene.scene.add(...this.light);
   }
 
-  update() { }
+  update() {
+  }
 }
