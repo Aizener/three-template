@@ -70,5 +70,9 @@ export class Resource extends EventEmitter {
     return this.textures.find(texture => texture.name === name);
   }
 
+  getModel(name: string) {
+    return this.models.find(model => model.userData.name === name);
+  }
+
   update() { }
 }
