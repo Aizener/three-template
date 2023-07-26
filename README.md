@@ -16,4 +16,5 @@
 在线例子：[碰撞检测和第一人称模拟](http://coke-cola.gitee.io/exhibition-hall/)，源码分支：[exhibition-hall](https://github.com/Aizener/three-template/tree/exhibition-hall)
 ## 第三人称鼠标点击地面移动
 在线例子：[第三人称鼠标点击地面移动](http://coke-cola.gitee.io/third-person-move/)，源码分支：[third-person-move](https://github.com/Aizener/three-template/tree/third-person-move)
-
+## 网格物体尺寸标记
+在线例子：[网格物体尺寸标记](http://coke-cola.gitee.io/size-marker/)，源码分支：[third-person-move](https://github.com/Aizener/three-template/tree/size-marker)
