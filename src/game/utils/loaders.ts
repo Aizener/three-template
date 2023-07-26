@@ -3,9 +3,11 @@ import { LoadingManager, TextureLoader } from 'three';
 import { Game } from '..';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
+import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
 
 export class Loaders extends EventEmitter {
   textureLoader!: TextureLoader;
+  fontLoader!: FontLoader;
   gltfLoader!: GLTFLoader;
   glbLoader!: GLTFLoader;
   loadingManager!: LoadingManager;
@@ -31,6 +33,14 @@ export class Loaders extends EventEmitter {
     }
     this.textureLoader = new TextureLoader(this.loadingManager).setPath(Game.BASE_DIR);
     return this.textureLoader;
+  }
+
+  getFontLoader() {
+    if (this.fontLoader) {
+      return this.fontLoader;
+    }
+    this.fontLoader = new FontLoader(this.loadingManager).setPath(Game.BASE_DIR);
+    return this.fontLoader;
   }
 
   getGLTFLoader() {

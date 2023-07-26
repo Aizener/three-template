@@ -2,24 +2,31 @@ import EventEmitter from 'events';
 import { Loaders } from './loaders';
 import { Texture } from 'three';
 import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
+import { Font } from 'three/examples/jsm/loaders/FontLoader';
 
-export type ResourceAssetType = '' | 'texture' | 'gltf' | 'glb';
+export type ResourceAssetType = '' | 'texture' | 'gltf' | 'glb' | 'font';
 export type ResourceAsset = {
   type: ResourceAssetType;
   url: string;
   name: string;
+}
+export type AssetFont = {
+  name: string;
+  font: Font;
 }
 
 export class Resource extends EventEmitter {
   loaders!: Loaders;
   assets!: ResourceAsset[];
   textures!: Texture[];
+  fonts!: AssetFont[];
   models!: GLTF[];
 
   constructor(assets: ResourceAsset[]) {
     super();
     this.assets = assets;
     this.textures = [];
+    this.fonts = [];
     this.models = [];
     this.loaders = new Loaders();
     this.initAssets();
@@ -63,6 +70,12 @@ export class Resource extends EventEmitter {
         glb.userData.name = name;
         this.models.push(glb);
         break;
+      case 'font':
+        const font = await this.loaders.getFontLoader().loadAsync(url, progress => {
+          this.emit('itemProgress', url, progress.loaded, progress.total);
+        });
+        this.fonts.push({ name, font });
+        break;
     }
   }
 
@@ -72,6 +85,10 @@ export class Resource extends EventEmitter {
 
   getModel(name: string) {
     return this.models.find(model => model.userData.name === name);
+  }
+
+  getFont(name: string) {
+    return this.fonts.find(font => font.name === name);
   }
 
   update() { }
