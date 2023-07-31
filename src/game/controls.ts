@@ -13,6 +13,11 @@ export class GameControls extends EventEmitter {
       this.game.gameRenderer.renderer.domElement
     );
     this.controls.enableDamping = true;
+    this.controls.enablePan = false;
+    this.controls.minDistance = 1;
+    this.controls.maxDistance = 3;
+    this.controls.maxPolarAngle = Math.PI * 0.6;
+    this.controls.minPolarAngle = Math.PI * 0.2;
   }
 
   update() {

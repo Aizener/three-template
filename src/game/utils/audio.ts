@@ -5,9 +5,15 @@ type Sound = {
   name: string;
 }
 export class AudioHowl {
-  assets: string[];
+  assets!: string[];
   sounds: Sound[] = [];
-  constructor(assets: string[]) {
+
+  static instance: AudioHowl;
+  constructor(assets: string[] = []) {
+    if (AudioHowl.instance) {
+      return AudioHowl.instance;
+    }
+    AudioHowl.instance = this;
     this.assets = assets;
     this.init();
   }
@@ -39,12 +45,12 @@ export class AudioHowl {
     return this;
   }
 
-  play(name: string) {
+  play(name: string, loop = false) {
     const howl = this.getHowl(name);
     if (!howl) {
       return this;
     }
-    howl.play();
+    howl.loop(loop).play();
     return this;
   }
 

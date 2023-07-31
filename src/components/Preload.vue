@@ -18,10 +18,14 @@ const handleStart = () => {
   status.value = 2;
   setTimeout(() => {
     started.value = true;
-    const sound = 'bgm.ogg';
-    const audio = new AudioHowl([sound]);
-    audio.load(sound).play(sound);
+    const sound = 'naruto_bgm.mp3';
+    const toadSound = 'toad.mp3';
+    const audio = new AudioHowl([sound, toadSound]);
+    audio.getHowl(sound)?.volume(0.2);
+    audio.load(sound).play(sound, true);
+    audio.load(toadSound);
     game.start();
+    document.documentElement.requestFullscreen();
     emits('start', game);
   });
 }

@@ -1,7 +1,12 @@
 import { EventEmitter } from 'events';
-import { AnimationAction, AnimationMixer, Quaternion, Scene, Vector3 } from 'three';
+import { AnimationAction, AnimationMixer, CapsuleGeometry, Group, Mesh, MeshNormalMaterial, Quaternion, Scene, Vector3 } from 'three';
 import { Game } from '../index';
 import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
+import { SceneOctree } from './octree';
+import { AudioHowl } from '../utils/audio';
+import { result } from '../../utils/touchbar';
+import { gsap } from 'gsap';
+import { Toad } from './toad';
 
 type Keypress = { w: boolean, a: boolean, s: boolean, d: boolean, shift: boolean, e: boolean, space: boolean };
 enum Status {
@@ -24,12 +29,22 @@ export class Naruto extends EventEmitter {
   animationMap: Map<string, AnimationAction> = new Map();
   walkSpeed: number = 2;
   runSpeed: number = 5;
-  jumpSpeed: number = 0;
   isMove: boolean = false;
+  capsule!: Mesh<CapsuleGeometry, MeshNormalMaterial>;
+  sceneOctree: SceneOctree;
+
+  toad!: Toad;
+  audio!: AudioHowl;
   constructor() {
     super();
     this.game = Game.getInstance();
     this.scene = this.game.gameScene.scene;
+    this.sceneOctree = new SceneOctree();
+    // this.capsule = new Mesh(
+    //   new CapsuleGeometry(0.25, 1),
+    //   new MeshNormalMaterial()
+    // );
+    // this.scene.add(this.capsule);
     this.init();
   }
 
@@ -37,13 +52,18 @@ export class Naruto extends EventEmitter {
     this.model = this.game.resource.getModel('hatch_naruto') as GLTF;
     this.model.scene.rotation.order = 'YXZ';
     this.model.scene.rotation.y = Math.PI;
+    this.model.scene.traverse(item => {
+      if ((item as Mesh).isMesh) {
+        item.castShadow = true;
+        item.receiveShadow = true;
+      }
+    });
     this.mixer = new AnimationMixer(this.model.scene);
     this.mixer.timeScale = 0.001;
     this.model.animations.forEach(animation => {
       const actionClip = this.mixer.clipAction(animation);
       this.animationMap.set(animation.name, actionClip);
     });
-    console.log(this.animationMap);
     this.scene.add(this.model.scene);
 
     this.initEvents();
@@ -51,40 +71,63 @@ export class Naruto extends EventEmitter {
   }
 
   initEvents() {
+    if (Game.isMobile) {
+      this.initMobileEvents();
+    } else {
+      this.initPCEvents();
+    }
+  }
+
+  initPCEvents() {
     document.addEventListener('keydown', evt => {
       const key = evt.key.toLocaleLowerCase().replace(' ', 'space');
       if (Reflect.ownKeys(this.keypress).includes(key)) {
         this.keypress[key as keyof Keypress] = true;
       }
       // 如果按下跳跃键且跳跃速度为0时对初速度进行赋值，且跑步状态时跳跃速率更大
-      if (this.keypress['space'] && this.jumpSpeed === 0) {
-        this.jumpSpeed = this.status === Status.RUNNING ? 8 : 5;
+      if (this.keypress['space'] && ![Status.JUMP, Status.FALLING].includes(this.status)) {
+        this.sceneOctree.fallingSpeed = (this.status === Status.RUNNING ? 8 : 5) * 0.01;
       }
+      if (key === 'r') {
+        this.makeToad();
+      }
+      this.emit('keydown', key);
     });
     document.addEventListener('keyup', evt => {
       const key = evt.key.toLocaleLowerCase();
       if (Reflect.ownKeys(this.keypress).includes(key)) {
         this.keypress[key as keyof Keypress] = false;
       }
+      this.emit('keyup', key.replace(' ', 'space'));
     });
   }
 
-  handleJump(delta: number) {
-    // 设置一个较小的系数，使得运动幅度不会很大
-    const ratio = 0.001;
-    // 计算跳起初速度
-    const speed = this.jumpSpeed * delta * ratio;
-    const player = this.model.scene;
-    // 人物往上运动
-    player.position.y += speed;
-    // 对初速做重力运算
-    this.jumpSpeed += -this.game.gameWorld.grivity * ratio * delta;
-    // 当人物高度小于等于0时作重置处理
-    if (player.position.y <= 0) {
-      player.position.y = 0;
-      this.jumpSpeed = 0;
-      this.keypress['space'] = false;
+  initMobileEvents() {
+    result.callback = (type: string) => {
+      if (type === 'r') {
+        this.makeToad();
+      } else if (type === 'space') {
+        this.keypress[type] = true;
+        this.sceneOctree.fallingSpeed = (this.status === Status.RUNNING ? 8 : 5) * 0.01;
+      } else {
+        for (const key in result.keypress) {
+          // 跳跃状态由重力着地时来修改
+          if (key !== 'space') {
+            this.keypress[key as keyof Keypress] = result.keypress[key] as boolean;
+          }
+        }
+      }
     }
+  }
+
+  makeToad() {
+    this.audio = new AudioHowl();
+    this.audio.play('toad.mp3');
+    this.actionAction.stop();
+    setTimeout(() => {
+      this.actionAction.play();
+    }, 500);
+    this.toad = new Toad();
   }
 
   handleMove(delta: number) {
@@ -102,14 +145,21 @@ export class Naruto extends EventEmitter {
     // 将方向向量乘以速率和delta来获得X和Z轴的速率
     const moveX = speed * direction.x * delta;
     const moveZ = speed * direction.z * delta;
+    this.sceneOctree.capsule.translate(new Vector3(moveX, 0, moveZ));
     this.lookAtPlayer(moveX, moveZ);
+  }
+
+  syncCapsule() {
+    const player = this.model.scene;
+    const { start, radius } = this.sceneOctree.capsule;
+    const position = start.clone();
+    position.y -= radius;
+    player.position.copy(position);
   }
 
   lookAtPlayer(moveX: number, moveZ: number) {
     // 重新赋值位置
     const player = this.model.scene;
-    player.position.x += moveX;
-    player.position.z += moveZ;
 
     const controls = this.game.gameControls.controls;
     controls.object.position.x += moveX;
@@ -176,7 +226,12 @@ export class Naruto extends EventEmitter {
     }
 
     if (this.keypress['space']) {
-      this.status = this.jumpSpeed > 0 ? Status.JUMP : Status.FALLING;
+      this.status = this.sceneOctree.fallingSpeed > 0 ? Status.JUMP : Status.FALLING;
+    }
+
+    if (this.status === Status.FALLING && this.sceneOctree.capsuleOnFloor) {
+      this.status = Status.IDLE;
+      this.keypress['space'] = false;
     }
 
     // 获取当前状态对应的动画
@@ -204,8 +259,11 @@ export class Naruto extends EventEmitter {
     }
     if (this.status === Status.JUMP || this.status === Status.FALLING) {
       this.isMove ? this.handleMove(delta) : this.lookAtPlayer(0, 0);
-      this.handleJump(delta);
     }
     this.mixer && this.mixer.update(delta);
+    // this.capsule.position.copy(this.model.scene.position);
+    // this.capsule.position.y = this.model.scene.position.y + 0.75;
+    this.syncCapsule();
+    this.lookAtPlayer(0, 0);
   }
 }
