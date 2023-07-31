@@ -1,11 +1,10 @@
 import { EventEmitter } from 'events';
-import { AnimationAction, AnimationMixer, CapsuleGeometry, Group, Mesh, MeshNormalMaterial, Quaternion, Scene, Vector3 } from 'three';
+import { AnimationAction, AnimationMixer, CapsuleGeometry, Mesh, MeshNormalMaterial, Quaternion, Scene, Vector3 } from 'three';
 import { Game } from '../index';
 import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
 import { SceneOctree } from './octree';
 import { AudioHowl } from '../utils/audio';
 import { result } from '../../utils/touchbar';
-import { gsap } from 'gsap';
 import { Toad } from './toad';
 
 type Keypress = { w: boolean, a: boolean, s: boolean, d: boolean, shift: boolean, e: boolean, space: boolean };

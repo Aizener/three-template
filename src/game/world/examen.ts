@@ -1,5 +1,5 @@
 import { EventEmitter } from 'events';
-import { Mesh, Scene, Vector3 } from 'three';
+import { Mesh, Scene } from 'three';
 import { Game } from '../index';
 import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
 import { SceneOctree } from './octree';

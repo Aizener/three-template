@@ -2,7 +2,6 @@ import EventEmitter from 'events';
 import { SkyBox } from './sky-box';
 import { Game } from '../index';
 import { Naruto } from './naruto';
-import { AxesHelper, GridHelper } from 'three';
 import { Examen } from './examen';
 import { SceneOctree } from './octree';
 
