@@ -18,3 +18,5 @@
 在线例子：[第三人称鼠标点击地面移动](http://coke-cola.gitee.io/third-person-move/)，源码分支：[third-person-move](https://github.com/Aizener/three-template/tree/third-person-move)
 ## 网格物体尺寸标记
 在线例子：[网格物体尺寸标记](http://coke-cola.gitee.io/size-marker/)，源码分支：[third-person-move](https://github.com/Aizener/three-template/tree/size-marker)
+## 第三人称鸣人角色操控
+在线例子：[第三人称鸣人角色操控](http://coke-cola.gitee.io/third-person-naruto/)，源码分支：[third-person-move](https://github.com/Aizener/three-template/tree/third-person-naruto/)
