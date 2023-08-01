@@ -1,32 +1,28 @@
 import EventEmitter from 'events';
-import { SkyBox } from './sky-box';
-import { Cube } from './cube';
 import { Game } from '../index';
+import { Car } from './car';
+import { Road } from './road';
 
 export class GameWorld extends EventEmitter {
   game: Game;
-  sky: SkyBox;
-  cube!: Cube;
+  car!: Car;
+  road!: Road;
   constructor() {
     super();
     this.game = Game.getInstance();
-    this.sky = new SkyBox();
-    this.game.onReady(() => {
-      this.addCube();
-    });
+    this.addCar();
+    this.addRoad();
   }
 
-  addCube() {
-    this.cube = new Cube();
-    this.cube.update = () => {
-      const elapsed = this.game.time.elapsed;
-      const cube = this.cube.mesh;
-      const time = elapsed * 0.001;
-      cube.rotation.y = time;
-    }
+  addCar() {
+    this.car = new Car();
+  }
+
+  addRoad() {
+    this.road = new Road();
   }
 
   update() {
-    this.cube && this.cube.update();
+    this.car && this.car.update();
   }
 }

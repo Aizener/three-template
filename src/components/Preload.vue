@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { Game } from '@/game';
-import { AudioHowl } from '@/game/utils/audio';
 import { onMounted, ref } from 'vue';
 
 const progress = ref(0);
@@ -9,7 +8,7 @@ const status = ref(0);  // 0：资源加载 1：资源加载完成 2：进入场
 const started = ref(false);
 let loadedNum = 1;
 let virtualLoaed = 0;
-let virtualTotal = 200;
+let virtualTotal = 500;
 let lastLoaded = 0;
 let game: Game;
 
@@ -18,9 +17,6 @@ const handleStart = () => {
   status.value = 2;
   setTimeout(() => {
     started.value = true;
-    const sound = 'bgm.ogg';
-    const audio = new AudioHowl([sound]);
-    audio.load(sound).play(sound);
     game.start();
     emits('start', game);
   });
@@ -130,7 +126,7 @@ onMounted(() => {
   opacity: 0;
 }
 .fade-enter-active {
-  transition: all 0.8s;
+  transition: all 1.3s;
 }
 .fade-leave-active {
   transition: all .3s;

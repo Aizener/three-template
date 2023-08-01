@@ -21,13 +21,14 @@ export class AudioHowl {
   init() {
     this.assets.forEach(asset => {
       const howl = new Howl({
-        src: [import.meta.env.BASE_URL + 'audio/' + asset],
+        src: [import.meta.env.BASE_URL + 'resources/audio/' + asset],
         loop: false,
       });
       this.sounds.push({
         howl,
         name: asset
       });
+      howl.load();
     });
   }
 
