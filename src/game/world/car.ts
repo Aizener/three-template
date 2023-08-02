@@ -1,10 +1,11 @@
 import { EventEmitter } from 'events';
-import { Color, Mesh, MeshPhysicalMaterial, MeshStandardMaterial, Object3D, Scene, SpotLight, Vector2, Vector3 } from 'three';
+import { AnimationMixer, Color, LoopOnce, Mesh, MeshPhysicalMaterial, MeshStandardMaterial, Object3D, Raycaster, Scene, SpotLight, Vector2, Vector3 } from 'three';
 import { Game } from '../index';
 import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
 import dat from 'dat.gui';
 import gsap from 'gsap';
 import { AudioHowl } from '../utils/audio';
+import { Point } from './point';
 
 export class Car extends EventEmitter {
   game: Game;
@@ -17,6 +18,7 @@ export class Car extends EventEmitter {
   tire2!: Object3D;
   tire3!: Object3D;
   tire4!: Object3D;
+  point!: Point;
   speed: Vector2 = new Vector2();
   tireRotationSpeed: number = 0;
   box: Object3D = new Object3D();
@@ -24,6 +26,7 @@ export class Car extends EventEmitter {
   spotLight!: SpotLight;
   spotObject: Object3D = new Object3D();
   isDrift: boolean = false;
+  mixer!: AnimationMixer;
   constructor() {
     super();
     this.game = Game.getInstance();
@@ -43,13 +46,18 @@ export class Car extends EventEmitter {
     this.scene.add(this.spotObject);
     this.scene.add(this.box);
 
-    this.spotLight = new SpotLight(0xffffff, 200, 20, Math.PI * 0.3, 0.01);
-    this.spotLight.position.y = 2;
-    this.spotLight.position.z = 1;
-    this.spotLight.intensity = 0;
-    this.box.add(this.spotLight);
-    this.spotLight.target = this.spotObject;
+    this.initSpotLight();
+    this.initPoint();
+    this.initDebug();
+  }
 
+  getDirection() {
+    const direction = new Vector3();
+    this.box.getWorldDirection(direction);
+    return direction;
+  }
+
+  initDebug() {
     this.debugParams = {
       bodyColor: 0x49519e,
       tireColor: 0x8c8c8c,
@@ -117,7 +125,6 @@ export class Car extends EventEmitter {
     this.addColorDebug('tireColor', tireMaterial, '轮胎颜色');
     this.addColorDebug('glassColor', glassMaterial, '玻璃颜色');
     this.addColorDebug('lightColor', lightMaterial, '车前盖大灯颜色');
-
     const audio = new AudioHowl();
     const bgm = audio.getHowl('drive.ogg');
     this.gui.add(this.debugParams, 'isFirst').onChange(() => {
@@ -136,22 +143,73 @@ export class Car extends EventEmitter {
         });
         bgm?.pause();
         this.spotLight.intensity = 0;
+        this.point.mesh.visible = true;
       } else {
         this.spotLight.intensity = 200;
+        this.point.mesh.visible = false;
         setTimeout(() => {
           bgm?.volume(0.5);
           bgm?.loop(true).play();
-        }, 1e3);
+        }, 500);
       }
     }).name('第一视角');
     this.gui.add(this.debugParams, 'resetPosition').name('重置位置');
     (this.gui.domElement.parentElement as HTMLDivElement).style.zIndex = '2';
   }
 
-  getDirection() {
-    const direction = new Vector3();
-    this.box.getWorldDirection(direction);
-    return direction;
+  initSpotLight() {
+    this.spotLight = new SpotLight(0xffffff, 200, 20, Math.PI * 0.3, 0.01);
+    this.spotLight.position.y = 2;
+    this.spotLight.position.z = 1;
+    this.spotLight.intensity = 0;
+    this.box.add(this.spotLight);
+    this.spotLight.target = this.spotObject;
+  }
+
+  initPoint() {
+    this.point = new Point();
+    this.point.mesh.position.x = -0.1;
+    this.point.mesh.position.y = 0.92;
+    this.point.mesh.position.z = 2.3;
+    this.point.mesh.rotation.x = Math.PI * 0.52;
+    this.box.add(this.point.mesh);
+
+    const raycaster = new Raycaster();
+    const mouse = new Vector2();
+
+    this.mixer = new AnimationMixer(this.model.scene);
+    this.mixer.timeScale = 0.001;
+    const clipAction = this.mixer.clipAction(this.model.animations[0]);
+    clipAction.loop = LoopOnce;
+    window.addEventListener('mousedown', evt => {
+      const x = evt.clientX;
+      const y = evt.clientY;
+      mouse.x = (x / this.game.width) * 2 - 1;
+      mouse.y = -(y / this.game.height) * 2 + 1;
+      raycaster.setFromCamera(mouse, this.game.gameCamera.camera);
+      const objects = raycaster.intersectObject(this.point.mesh);
+      if (objects.length) {
+        const targetPosition = this.box.position.clone();
+        gsap.to(this.game.gameControls.controls.target, {
+          x: targetPosition.x,
+          y: targetPosition.y,
+          z: targetPosition.z,
+          duration: 1
+        });
+        const direction = this.getDirection();
+        const cameraPosition = targetPosition.add(direction.normalize().multiplyScalar(5));
+        cameraPosition.y = 2;
+        gsap.to(this.game.gameControls.controls.object.position, {
+          x: cameraPosition.x,
+          y: cameraPosition.y,
+          z: cameraPosition.z,
+          duration: 1,
+          onComplete: () => {
+            clipAction.reset().play();
+          }
+        });
+      }
+    });
   }
 
   initEvents() {
@@ -268,5 +326,8 @@ export class Car extends EventEmitter {
     } else {
       controls.enabled = true;
     }
+
+    this.point && this.point.update();
+    this.mixer && this.mixer.update(delta);
   }
 }
