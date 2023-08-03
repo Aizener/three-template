@@ -20,3 +20,5 @@
 在线例子：[网格物体尺寸标记](http://coke-cola.gitee.io/size-marker/)，源码分支：[third-person-move](https://github.com/Aizener/three-template/tree/size-marker)
 ## 第三人称鸣人角色操控
 在线例子：[第三人称鸣人角色操控](http://coke-cola.gitee.io/third-person-naruto/)，源码分支：[third-person-move](https://github.com/Aizener/three-template/tree/third-person-naruto/)
+## 汽车的交互展示
+在线例子：[汽车的交互展示](http://coke-cola.gitee.io/car-show/)，源码分支：[car-show](https://github.com/Aizener/three-template/tree/car-show/)
