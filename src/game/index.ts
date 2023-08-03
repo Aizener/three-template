@@ -24,7 +24,6 @@ export class Game {
   gameWorld!: GameWorld; // 主体场景类实例
   started!: boolean; // 是否开始进行渲染
   ready!: boolean; // 资源是否准备完毕
-  private preRun!: boolean; // 是否进行了第一次的update方法
 
   static instance: Game; // Game实例对象
   static BASE_DIR: string = import.meta.env.BASE_URL; // 资源类需要用到的公共基础路径
@@ -45,11 +44,9 @@ export class Game {
     this.initRenderer();
     this.initLight();
     this.initControls();
-    this.initWorld();
 
     this.update();
     this.onResize();
-    this.preRun = true;
     window.addEventListener('resize', this.onResize.bind(this));
   }
 
@@ -69,13 +66,11 @@ export class Game {
 
   initResource() {
     this.resource = new Resource(assets);
-    console.log(this.resource)
-  }
-
-  onReady(callback: Function) {
     this.resource.on('loaded', () => {
       this.ready = true;
-      callback();
+      setTimeout(() => {
+        this.initWorld();
+      }, 500);
     });
   }
 
@@ -116,14 +111,14 @@ export class Game {
   }
 
   update() {
-    if (this.started || !this.preRun) {
+    if (this.started) {
+      this.time && this.time.update();
       this.gameScene && this.gameScene.update();
       this.gameCamera && this.gameCamera.update();
-      this.gameRenderer && this.gameRenderer.update();
       this.gameControls && this.gameControls.update();
       this.gameWorld && this.gameWorld.update();
-      this.time && this.time.update();
     }
+    this.gameRenderer && this.gameRenderer.update();
 
     window.requestAnimationFrame(() => {
       this.update();

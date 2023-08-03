@@ -14,12 +14,15 @@ const assets: ResourceAsset[] = Object.keys(resources).map(key => {
     type = 'glb';
   } else if (ext === 'typeface.json') {
     type = 'font';
+  } else if (['ogg', 'mp3'].includes(ext)) {
+    type = 'audio';
   }
   const name = path.split('/').slice(-1)[0];
   return {
     type,
     name,
-    url
+    url,
+    fullName: `${name}.${ext}`
   }
 });
 

@@ -3,12 +3,14 @@ import { Loaders } from './loaders';
 import { Texture } from 'three';
 import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
 import { Font } from 'three/examples/jsm/loaders/FontLoader';
+import { AudioHowl } from './audio';
 
-export type ResourceAssetType = '' | 'texture' | 'gltf' | 'glb' | 'font';
+export type ResourceAssetType = '' | 'texture' | 'gltf' | 'glb' | 'font' | 'audio';
 export type ResourceAsset = {
   type: ResourceAssetType;
   url: string;
   name: string;
+  fullName: string;
 }
 export type AssetFont = {
   name: string;
@@ -33,8 +35,14 @@ export class Resource extends EventEmitter {
   }
 
   async initAssets() {
+    await this.loadAudio();
     await this.loadAssets();
     this.emit('loaded');
+  }
+
+  async loadAudio() {
+    const audioAssets = this.assets.filter(item => item.type === 'audio');
+    new AudioHowl(audioAssets.map(item => item.fullName));
   }
 
   async loadAssets() {

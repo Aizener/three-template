@@ -11,9 +11,7 @@ export class GameWorld extends EventEmitter {
     super();
     this.game = Game.getInstance();
     this.sky = new SkyBox();
-    this.game.onReady(() => {
-      this.addCube();
-    });
+    this.addCube();
   }
 
   addCube() {

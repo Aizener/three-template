@@ -20,7 +20,7 @@ const handleStart = () => {
     started.value = true;
     const sound = 'bgm.ogg';
     const audio = new AudioHowl([sound]);
-    audio.load(sound).play(sound);
+    audio.play(sound);
     game.start();
     emits('start', game);
   });
