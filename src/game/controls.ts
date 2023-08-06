@@ -1,18 +1,14 @@
 import { EventEmitter } from 'events';
 import { Game } from './index';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { FirstPersonalControls } from './plugins/FirstPersonalControls';
 
 export class GameControls extends EventEmitter {
   game: Game;
-  controls: OrbitControls;
+  controls!: FirstPersonalControls;
   constructor() {
     super();
     this.game = Game.getInstance();
-    this.controls = new OrbitControls(
-      this.game.gameCamera.camera,
-      this.game.gameRenderer.renderer.domElement
-    );
-    this.controls.enableDamping = true;
+    this.controls = new FirstPersonalControls(this.game.gameCamera.camera, this.game.gameRenderer.renderer.domElement);
   }
 
   update() {

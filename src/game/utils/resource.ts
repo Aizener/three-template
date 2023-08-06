@@ -90,6 +90,7 @@ export class Resource extends EventEmitter {
         const hdr = await this.loaders.getRGBELoader().loadAsync(url, progress => {
           this.emit('itemProgress', url, progress.loaded, progress.total);
         });
+        hdr.userData.name = name;
         this.hdrs.push(hdr);
         break;
     }
@@ -105,6 +106,10 @@ export class Resource extends EventEmitter {
 
   getFont(name: string) {
     return this.fonts.find(font => font.name === name);
+  }
+
+  getHDR(name: string) {
+    return this.hdrs.find(hdr => hdr.userData.name === name);
   }
 
   update() { }

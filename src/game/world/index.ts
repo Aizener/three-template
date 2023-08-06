@@ -1,30 +1,28 @@
 import EventEmitter from 'events';
-import { SkyBox } from './sky-box';
-import { Cube } from './cube';
 import { Game } from '../index';
+import { SphereInstance } from './sphere';
+import { DataTexture, Mesh } from 'three';
 
 export class GameWorld extends EventEmitter {
   game: Game;
-  sky: SkyBox;
-  cube!: Cube;
+  sphere!: SphereInstance;
+
+  scene1!: Mesh;
+  scene2!: Mesh;
+  scene3!: Mesh;
+  scene4!: Mesh;
   constructor() {
     super();
     this.game = Game.getInstance();
-    this.sky = new SkyBox();
-    this.addCube();
+    this.initSphere();
   }
 
-  addCube() {
-    this.cube = new Cube();
-    this.cube.update = () => {
-      const elapsed = this.game.time.elapsed;
-      const cube = this.cube.mesh;
-      const time = elapsed * 0.001;
-      cube.rotation.y = time;
-    }
+  initSphere() {
+    this.sphere = new SphereInstance();
+    const acoustical_shell_1k = this.game.resource.getHDR('acoustical_shell_1k') as DataTexture;
+    this.scene1 = this.sphere.init(acoustical_shell_1k);
   }
 
   update() {
-    this.cube && this.cube.update();
   }
 }
