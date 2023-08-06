@@ -1,11 +1,11 @@
 import EventEmitter from 'events';
 import { Loaders } from './loaders';
-import { Texture } from 'three';
+import { DataTexture, Texture } from 'three';
 import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
 import { Font } from 'three/examples/jsm/loaders/FontLoader';
 import { AudioHowl } from './audio';
 
-export type ResourceAssetType = '' | 'texture' | 'gltf' | 'glb' | 'font' | 'audio';
+export type ResourceAssetType = '' | 'texture' | 'gltf' | 'glb' | 'font' | 'audio' | 'hdr';
 export type ResourceAsset = {
   type: ResourceAssetType;
   url: string;
@@ -23,6 +23,7 @@ export class Resource extends EventEmitter {
   textures!: Texture[];
   fonts!: AssetFont[];
   models!: GLTF[];
+  hdrs!: DataTexture[];
 
   constructor(assets: ResourceAsset[]) {
     super();
@@ -30,6 +31,7 @@ export class Resource extends EventEmitter {
     this.textures = [];
     this.fonts = [];
     this.models = [];
+    this.hdrs = [];
     this.loaders = new Loaders();
     this.initAssets();
   }
@@ -83,6 +85,12 @@ export class Resource extends EventEmitter {
           this.emit('itemProgress', url, progress.loaded, progress.total);
         });
         this.fonts.push({ name, font });
+        break;
+      case 'hdr':
+        const hdr = await this.loaders.getRGBELoader().loadAsync(url, progress => {
+          this.emit('itemProgress', url, progress.loaded, progress.total);
+        });
+        this.hdrs.push(hdr);
         break;
     }
   }

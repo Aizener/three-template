@@ -4,12 +4,14 @@ import { Game } from '..';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
+import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader';
 
 export class Loaders extends EventEmitter {
   textureLoader!: TextureLoader;
   fontLoader!: FontLoader;
   gltfLoader!: GLTFLoader;
   glbLoader!: GLTFLoader;
+  rgbeLoader!: RGBELoader;
   loadingManager!: LoadingManager;
 
   constructor() {
@@ -62,6 +64,14 @@ export class Loaders extends EventEmitter {
     dracoLoader.setDecoderPath('/draco/');
     this.gltfLoader.setDRACOLoader(dracoLoader);
     return this.gltfLoader;
+  }
+
+  getRGBELoader() {
+    if (this.rgbeLoader) {
+      return this.rgbeLoader;
+    }
+    this.rgbeLoader = new RGBELoader(this.loadingManager).setPath(Game.BASE_DIR);
+    return this.rgbeLoader;
   }
 
   update() { }

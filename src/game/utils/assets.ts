@@ -16,6 +16,8 @@ const assets: ResourceAsset[] = Object.keys(resources).map(key => {
     type = 'font';
   } else if (['ogg', 'mp3'].includes(ext)) {
     type = 'audio';
+  } else if (ext === 'hdr') {
+    type = 'hdr';
   }
   const name = path.split('/').slice(-1)[0];
   return {
