@@ -44,7 +44,7 @@ export class FirstPersonalControls extends EventEmitter {
       this.isActive = false;
     });
 
-    document.addEventListener('wheel', evt => {
+    document.addEventListener('wheel', () => {
       // this.moveCameraZ(evt.deltaY < 0);
     });
   }
@@ -61,7 +61,7 @@ export class FirstPersonalControls extends EventEmitter {
       this.offset.x = offsetX;
       this.offset.y = offsetY;
     });
-    document.addEventListener('touchend', evt => {
+    document.addEventListener('touchend', () => {
       this.isActive = false;
     });
   }
