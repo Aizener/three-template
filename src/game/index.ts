@@ -26,6 +26,7 @@ export class Game {
   ready!: boolean; // 资源是否准备完毕
 
   static instance: Game; // Game实例对象
+  static isMobile: boolean = navigator.userAgent.includes('Mobile'); // 是否为手机端
   static BASE_DIR: string = import.meta.env.BASE_URL; // 资源类需要用到的公共基础路径
 
   constructor(selector: string) {

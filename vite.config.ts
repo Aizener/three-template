@@ -4,7 +4,7 @@ import path from 'path'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: '/',
+  base: '/fullview/',
   server: {
     host: '0.0.0.0'
   },
@@ -20,6 +20,14 @@ export default defineConfig({
           name: 'skip-model',
           load(id) {
             if (id.endsWith('.glb') || id.endsWith('.gltf')) {
+              return '';
+            }
+          },
+        },
+        {
+          name: 'skip-hdr',
+          load(id) {
+            if (id.endsWith('.hdr')) {
               return '';
             }
           },
