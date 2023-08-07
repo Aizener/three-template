@@ -11,7 +11,8 @@ export class FirstPersonalControls extends EventEmitter {
   offset: Vector2 = new Vector2(); // 记录按住鼠标后的的下一次偏移值
   isActive: boolean = false;
 
-  lastRotateX: number = 0;
+  currentPosition: Vector3 = new Vector3();
+
   xAxis: Vector3 = new Vector3(1, 0, 0);
   yAxis: Vector3 = new Vector3(0, 1, 0);
 
@@ -20,6 +21,7 @@ export class FirstPersonalControls extends EventEmitter {
   constructor(camera: PerspectiveCamera, domElement: HTMLCanvasElement) {
     super();
     this.camera = camera;
+    this.camera.rotation.order = 'YXZ';
     this.domElement = domElement;
     this.game = Game.instance;
 
@@ -41,10 +43,25 @@ export class FirstPersonalControls extends EventEmitter {
     document.addEventListener('mouseup', () => {
       this.isActive = false;
     });
+
+    document.addEventListener('wheel', evt => {
+      this.moveCameraZ(evt.deltaY < 0);
+    });
   }
 
   initMobileEvents() {
 
+  }
+
+  moveCameraZ(isForwad: boolean) {
+    const radian = this.camera.rotation.y;
+    const speedDir = isForwad ? -1 : 1;
+    const ratio = 0.1;
+    const speed = ratio * speedDir;
+    const x = Math.sin(radian) * speed;
+    const z = Math.cos(radian) * speed;
+    this.camera.position.x += x;
+    this.camera.position.z += z;
   }
 
   onStart(offsetX: number, offsetY: number) {
@@ -81,6 +98,7 @@ export class FirstPersonalControls extends EventEmitter {
     this.quaternionY.setFromAxisAngle(this.yAxis, speed * x); // 进行Y轴的四元素赋值
 
     this.camera.quaternion.premultiply(this.quaternionY).multiply(this.quaternionX);
+    this.emit('changeRotation', this.camera.rotation);
   }
 
   update() {
