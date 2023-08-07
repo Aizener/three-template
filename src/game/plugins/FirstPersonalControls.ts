@@ -45,12 +45,25 @@ export class FirstPersonalControls extends EventEmitter {
     });
 
     document.addEventListener('wheel', evt => {
-      this.moveCameraZ(evt.deltaY < 0);
+      // this.moveCameraZ(evt.deltaY < 0);
     });
   }
 
   initMobileEvents() {
-
+    this.domElement.addEventListener('touchstart', evt => {
+      const touch = evt.changedTouches[0];
+      const { clientX: offsetX, clientY: offsetY } = touch;
+      this.onStart(offsetX, offsetY);
+    });
+    this.domElement.addEventListener('touchmove', evt => {
+      const touch = evt.changedTouches[0];
+      const { clientX: offsetX, clientY: offsetY } = touch;
+      this.offset.x = offsetX;
+      this.offset.y = offsetY;
+    });
+    document.addEventListener('touchend', evt => {
+      this.isActive = false;
+    });
   }
 
   moveCameraZ(isForwad: boolean) {
