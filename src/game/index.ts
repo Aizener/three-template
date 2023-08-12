@@ -7,6 +7,7 @@ import { Time } from './utils/time';
 import { Resource } from './utils/resource';
 import assets from './utils/assets';
 import { GameLight } from './light';
+import { GameStats } from './utils/stats';
 
 export class Game {
   width!: number; // 视图宽度
@@ -22,6 +23,7 @@ export class Game {
   gameLight!: GameLight; // 灯光类实例
   gameControls!: GameControls; // 控制器类实例
   gameWorld!: GameWorld; // 主体场景类实例
+  gameStats!: GameStats; // 性能分析工具
   started!: boolean; // 是否开始进行渲染
   ready!: boolean; // 资源是否准备完毕
 
@@ -45,6 +47,7 @@ export class Game {
     this.initRenderer();
     this.initLight();
     this.initControls();
+    this.initGameStats();
 
     this.update();
     this.onResize();
@@ -103,6 +106,10 @@ export class Game {
     this.gameControls = new GameControls();
   }
 
+  initGameStats() {
+    this.gameStats = new GameStats();
+  }
+
   initWorld() {
     this.gameWorld = new GameWorld();
   }
@@ -112,6 +119,7 @@ export class Game {
   }
 
   update() {
+    this.gameStats.stats.begin();
     if (this.started) {
       this.time && this.time.update();
       this.gameScene && this.gameScene.update();
@@ -121,6 +129,7 @@ export class Game {
     }
     this.gameRenderer && this.gameRenderer.update();
 
+    this.gameStats.stats.end();
     window.requestAnimationFrame(() => {
       this.update();
     });
